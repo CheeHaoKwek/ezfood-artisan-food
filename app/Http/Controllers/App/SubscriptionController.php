@@ -21,8 +21,11 @@ class SubscriptionController extends Controller
     {
         $qrConfig = $this->qrConfigService->resolveActiveByCode($code);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         // A user with an active subscription is never shown the subscription flow again.
-        if (Auth::user()->activeSubscriptionFor($qrConfig) !== null) {
+        if ($user->activeSubscriptionFor($qrConfig) !== null) {
             return redirect()->route('app.meals.index', $qrConfig->code);
         }
 

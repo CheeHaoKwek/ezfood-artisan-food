@@ -3,8 +3,9 @@
 namespace App\Enums;
 
 use Carbon\CarbonInterface;
+use Filament\Support\Contracts\HasLabel;
 
-enum OperationDays: string
+enum OperationDays: string implements HasLabel
 {
     case MonToFri = 'mon_fri';
     case MonToSat = 'mon_sat';
@@ -16,6 +17,15 @@ enum OperationDays: string
             self::MonToFri => $date->isWeekday(),
             self::MonToSat => ! $date->isSunday(),
             self::MonToSun => true,
+        };
+    }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::MonToFri => 'Mon–Fri',
+            self::MonToSat => 'Mon–Sat',
+            self::MonToSun => 'Mon–Sun',
         };
     }
 }

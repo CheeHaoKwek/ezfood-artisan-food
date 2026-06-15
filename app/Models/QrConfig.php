@@ -6,6 +6,7 @@ use App\Enums\CutoffBasis;
 use App\Enums\MealMode;
 use App\Enums\OperationDays;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,8 @@ use Illuminate\Support\Str;
 ])]
 class QrConfig extends Model
 {
+    use HasFactory;
+
     protected static function booted(): void
     {
         static::creating(function (QrConfig $config) {

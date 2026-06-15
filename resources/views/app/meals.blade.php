@@ -17,7 +17,7 @@
         </select>
         <select name="meal_id" class="form-select mb-2" required>
             @foreach ($meals as $meal)
-                <option value="{{ $meal->id }}">{{ $meal->name }} (RM{{ $meal->price }})</option>
+                <option value="{{ $meal->id }}">{{ $meal->name }}{{ $meal->is_vegetarian ? ' 🌱' : '' }} (RM{{ $meal->price }})</option>
             @endforeach
         </select>
         <button class="btn btn-primary">Select meal</button>

@@ -46,6 +46,7 @@ class MealResource extends Resource
                 ->columns(3)
                 ->columnSpanFull(),
 
+            Toggle::make('is_vegetarian')->label('Vegetarian'),
             Toggle::make('is_active')->default(true),
         ])->columns(2);
     }
@@ -59,11 +60,20 @@ class MealResource extends Resource
                 TextColumn::make('price')->money('MYR')->sortable(),
                 TextColumn::make('available_slots')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state ? implode(', ', (array) $state) : 'All slots'),
+                    // Badge columns format each array item individually; null never reaches
+                    // formatStateUsing, so the "all slots" case needs placeholder().
+                    ->formatStateUsing(fn (string $state) => MealSlotType::from($state)->getLabel())
+                    ->placeholder('All slots'),
+                IconColumn::make('is_vegetarian')->label('Veg')->boolean()
+                    // Non-vegetarian is not a fault state — neutral dash instead of red cross.
+                    ->falseIcon('heroicon-o-minus')
+                    ->falseColor('gray')
+                    ->sortable(),
                 IconColumn::make('is_active')->boolean()->sortable(),
             ])
             ->filters([
                 SelectFilter::make('outlet')->relationship('outlet', 'name'),
+                TernaryFilter::make('is_vegetarian'),
                 TernaryFilter::make('is_active'),
             ])
             ->recordActions([EditAction::make()])
