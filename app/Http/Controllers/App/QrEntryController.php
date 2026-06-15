@@ -21,7 +21,10 @@ class QrEntryController extends Controller
             return redirect()->route('app.auth.show', $qrConfig->code);
         }
 
-        if (Auth::user()->activeSubscriptionFor($qrConfig) === null) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->activeSubscriptionFor($qrConfig) === null) {
             return redirect()->route('app.subscribe.create', $qrConfig->code);
         }
 

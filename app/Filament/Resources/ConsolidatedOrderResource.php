@@ -69,7 +69,9 @@ class ConsolidatedOrderResource extends Resource
                     )),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
-            ->toolbarActions([]);
+            ->toolbarActions([])
+            ->emptyStateHeading('No consolidated orders yet')
+            ->emptyStateDescription('Orders appear here automatically after each meal slot\'s cut-off — the consolidation job runs every 5 minutes.');
     }
 
     public static function getPages(): array

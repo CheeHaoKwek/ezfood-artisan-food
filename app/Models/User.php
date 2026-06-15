@@ -3,17 +3,22 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\DietaryPreference;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'is_admin'])]
+#[Fillable([
+    'name', 'nickname', 'mobile_number', 'company_name', 'dietary_preference',
+    'email', 'password', 'is_admin', 'outlet_id', 'registered_qr_config_id',
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -23,7 +28,9 @@ class User extends Authenticatable implements FilamentUser
     // TODO: replace with a proper staff/role system (later ticket)
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->is_admin;
+        // Coerce: is_admin is null on in-memory instances that never read the
+        // DB default (e.g. factory users) and on pre-flag legacy rows.
+        return (bool) $this->is_admin;
     }
 
     /**
@@ -37,7 +44,18 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'dietary_preference' => DietaryPreference::class,
         ];
+    }
+
+    public function outlet(): BelongsTo
+    {
+        return $this->belongsTo(Outlet::class);
+    }
+
+    public function registeredViaQrConfig(): BelongsTo
+    {
+        return $this->belongsTo(QrConfig::class, 'registered_qr_config_id');
     }
 
     public function subscriptions(): HasMany

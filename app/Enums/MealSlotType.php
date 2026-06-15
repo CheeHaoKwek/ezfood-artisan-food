@@ -2,9 +2,16 @@
 
 namespace App\Enums;
 
-enum MealSlotType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum MealSlotType: string implements HasLabel
 {
     case Breakfast = 'breakfast';
     case Lunch = 'lunch';
     case Dinner = 'dinner';
+
+    public function getLabel(): string
+    {
+        return ucfirst($this->value);
+    }
 }

@@ -40,7 +40,7 @@ class OutletSeeder extends Seeder
         $factory->meals()->createMany([
             ['name' => 'Nasi Lemak Ayam', 'price' => 8.50],
             ['name' => 'Mee Goreng Mamak', 'price' => 7.00],
-            ['name' => 'Roti Canai Set', 'price' => 5.50, 'available_slots' => [MealSlotType::Breakfast->value]],
+            ['name' => 'Roti Canai Set', 'price' => 5.50, 'is_vegetarian' => true, 'available_slots' => [MealSlotType::Breakfast->value]],
         ]);
 
         // A condo with one meal per day and a single daily cut-off
@@ -72,7 +72,7 @@ class OutletSeeder extends Seeder
 
         $condo->meals()->createMany([
             ['name' => 'Chicken Rice', 'price' => 9.00],
-            ['name' => 'Vegetarian Bento', 'price' => 10.50],
+            ['name' => 'Vegetarian Bento', 'price' => 10.50, 'is_vegetarian' => true],
         ]);
     }
 }

@@ -62,7 +62,8 @@ class OutletResource extends Resource
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('type')->badge()->sortable(),
                 TextColumn::make('address')->limit(40)->toggleable(),
-                TextColumn::make('qrConfigs_count')
+                // withCount('qrConfigs') aliases the value as snake_case qr_configs_count.
+                TextColumn::make('qr_configs_count')
                     ->counts('qrConfigs')
                     ->label('QR configs'),
                 IconColumn::make('is_active')->boolean()->sortable(),

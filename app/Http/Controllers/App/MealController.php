@@ -24,7 +24,10 @@ class MealController extends Controller
     public function index(string $code): View|RedirectResponse
     {
         $qrConfig = $this->qrConfigService->resolveActiveByCode($code);
-        $subscription = Auth::user()->activeSubscriptionFor($qrConfig);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->activeSubscriptionFor($qrConfig);
 
         if ($subscription === null) {
             return redirect()->route('app.subscribe.create', $qrConfig->code);
@@ -39,6 +42,7 @@ class MealController extends Controller
             'meals' => Meal::query()
                 ->where('outlet_id', $qrConfig->outlet_id)
                 ->where('is_active', true)
+                ->forDietaryPreference($user->dietary_preference)
                 ->get(),
             'selections' => $subscription->mealSelections()
                 ->whereDate('serve_date', '>=', $today->toDateString())
@@ -50,7 +54,10 @@ class MealController extends Controller
     public function store(Request $request, string $code): RedirectResponse
     {
         $qrConfig = $this->qrConfigService->resolveActiveByCode($code);
-        $subscription = Auth::user()->activeSubscriptionFor($qrConfig);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $subscription = $user->activeSubscriptionFor($qrConfig);
 
         if ($subscription === null) {
             return redirect()->route('app.subscribe.create', $qrConfig->code);

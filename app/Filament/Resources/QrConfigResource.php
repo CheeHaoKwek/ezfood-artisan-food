@@ -32,6 +32,8 @@ class QrConfigResource extends Resource
     protected static ?string $model = QrConfig::class;
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-qr-code';
     protected static ?string $navigationLabel = 'QR Configurations';
+    protected static ?string $modelLabel = 'QR config';
+    protected static ?string $pluralModelLabel = 'QR configs';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
@@ -108,7 +110,8 @@ class QrConfigResource extends Resource
             ])
             ->recordActions([
                 Action::make('downloadQr')
-                    ->label('Download QR')
+                    ->iconButton()
+                    ->tooltip('Download QR')
                     ->icon('heroicon-o-qr-code')
                     ->action(fn (QrConfig $record) => response()->streamDownload(
                         fn () => print app(QrCodeService::class)->svg($record),
